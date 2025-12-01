@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cryptocurrency vs Stock Market Analysis - Introduction</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -12,139 +14,296 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #10b981;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --bg-card: rgba(20, 25, 40, 0.6);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
         
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 50px 40px;
             text-align: center;
+            padding: 100px 40px 80px;
+            position: relative;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 300px;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.25) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
         }
         
         header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
         }
         
         header p {
-            font-size: 1.2em;
-            opacity: 0.95;
+            font-size: 1.4em;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
         
         .content {
-            padding: 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
         }
         
         h2 {
-            color: #667eea;
-            font-size: 1.8em;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 50px 0 25px;
+            letter-spacing: -0.5px;
         }
         
         h3 {
-            color: #764ba2;
-            font-size: 1.3em;
-            margin-top: 25px;
-            margin-bottom: 10px;
+            color: var(--accent);
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 30px 0 15px;
         }
         
         p {
-            margin-bottom: 15px;
-            font-size: 1.05em;
-            text-align: justify;
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.9;
         }
         
         ul {
-            margin: 15px 0 15px 40px;
+            margin: 20px 0 20px 40px;
+            color: var(--text-secondary);
         }
         
         li {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-size: 1.05em;
+            line-height: 1.7;
+        }
+        
+        li strong {
+            color: var(--text-primary);
+            font-weight: 600;
         }
         
         .highlight-box {
-            background: #f8f9ff;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 5px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid var(--primary);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .highlight-box h3 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .highlight-box p {
+            color: var(--text-secondary);
+        }
+        
+        .highlight-box ul {
+            margin-top: 15px;
         }
         
         .asset-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
         }
         
         .asset-item {
-            background: #f8f9ff;
-            padding: 15px;
-            border-radius: 8px;
-            border: 2px solid #e0e7ff;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .asset-item:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
         }
         
         .asset-item strong {
-            color: #667eea;
-            font-size: 1.1em;
+            color: var(--primary);
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .asset-item p {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            margin: 0;
         }
         
         .button-container {
             text-align: center;
-            padding: 40px 0;
-            margin-top: 30px;
+            padding: 60px 0 40px;
+            margin-top: 50px;
         }
         
         .explore-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             font-size: 1.3em;
-            font-weight: bold;
-            padding: 20px 50px;
+            font-weight: 700;
+            padding: 22px 50px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .explore-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .explore-button:hover::before {
+            left: 100%;
         }
         
         .explore-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
         }
         
         .explore-button:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
         
         footer {
-            background: #f8f9ff;
-            padding: 20px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            padding: 40px 20px;
             text-align: center;
-            color: #666;
-            font-size: 0.9em;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer p {
+            margin: 8px 0;
+            font-size: 1em;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 50px 0;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            
+            header p {
+                font-size: 1.1em;
+            }
+            
+            .content {
+                padding: 40px 20px;
+            }
+            
+            h2 {
+                font-size: 1.8em;
+            }
+            
+            .asset-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -178,6 +337,8 @@
                 Previous studies show that the connection between crypto and equities is not stable. It becomes stronger during periods of stress and weaker during calmer markets. By visualizing these patterns, we can see when crypto behaves like a risky extension of the stock market and when it acts like its own independent ecosystem.
             </p>
             
+            <div class="section-divider"></div>
+            
             <h2>Data Description</h2>
             <p>
                 For this project, we collected five years of daily price data for six assets using the yfinance API: SPY, Bitcoin (BTC), Ethereum (ETH), XRP, Litecoin (LTC), and Binance Coin (BNB).
@@ -185,22 +346,28 @@
             
             <div class="asset-list">
                 <div class="asset-item">
-                    <strong>SPY:</strong> An index fund that tracks the S&P 500, which represents the overall U.S. stock market.
+                    <strong>SPY</strong>
+                    <p>An index fund that tracks the S&P 500, which represents the overall U.S. stock market.</p>
                 </div>
                 <div class="asset-item">
-                    <strong>BTC (Bitcoin):</strong> The largest cryptocurrency by market cap and often considered the benchmark for the crypto market.
+                    <strong>BTC (Bitcoin)</strong>
+                    <p>The largest cryptocurrency by market cap and often considered the benchmark for the crypto market.</p>
                 </div>
                 <div class="asset-item">
-                    <strong>ETH (Ethereum):</strong> The second largest cryptocurrency, known for smart contracts and decentralized apps.
+                    <strong>ETH (Ethereum)</strong>
+                    <p>The second largest cryptocurrency, known for smart contracts and decentralized apps.</p>
                 </div>
                 <div class="asset-item">
-                    <strong>XRP:</strong> A digital asset tied to Ripple, often influenced by legal and regulatory developments.
+                    <strong>XRP</strong>
+                    <p>A digital asset tied to Ripple, often influenced by legal and regulatory developments.</p>
                 </div>
                 <div class="asset-item">
-                    <strong>LTC (Litecoin):</strong> A long-standing cryptocurrency designed for faster and cheaper transactions.
+                    <strong>LTC (Litecoin)</strong>
+                    <p>A long-standing cryptocurrency designed for faster and cheaper transactions.</p>
                 </div>
                 <div class="asset-item">
-                    <strong>BNB (Binance Coin):</strong> A coin tied to Binance, one of the world's largest exchanges, and heavily affected by exchange-related news.
+                    <strong>BNB (Binance Coin)</strong>
+                    <p>A coin tied to Binance, one of the world's largest exchanges, and heavily affected by exchange-related news.</p>
                 </div>
             </div>
             
@@ -246,7 +413,10 @@
             </p>
             
             <div class="button-container">
-                <a href="visualizations.html" class="explore-button">Explore Visualizations →</a>
+                <a href="visualizations.html" class="explore-button">
+                    <span>Explore Visualizations</span>
+                    <span style="font-size: 1.2em;">→</span>
+                </a>
             </div>
         </div>
         
