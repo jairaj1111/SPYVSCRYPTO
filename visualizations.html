@@ -17,6 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
     
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -24,88 +26,172 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #10b981;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --bg-card: rgba(20, 25, 40, 0.6);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
         
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
             text-align: center;
+            padding: 100px 40px 80px;
+            position: relative;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 300px;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.25) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
         }
         
         header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
         }
         
         header p {
-            font-size: 1.2em;
-            opacity: 0.95;
+            font-size: 1.4em;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
         
-        .viz-section {
-            padding: 40px;
-            border-bottom: 2px solid #e0e0e0;
+        .viz-section, .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            border-bottom: 1px solid var(--border);
         }
         
-        .viz-section:last-child {
+        .viz-section:last-child, .content-section:last-child {
             border-bottom: none;
         }
         
-        .viz-section h2 {
-            color: #667eea;
-            font-size: 2em;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
+        .viz-section h2, .content-section h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
         }
         
         .viz-section .subtitle {
-            color: #666;
+            color: var(--text-muted);
             font-style: italic;
             margin-bottom: 20px;
             font-size: 1.1em;
         }
         
+        .viz-section h3, .content-section h3 {
+            color: var(--accent);
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 30px 0 15px;
+        }
+        
+        .viz-section p, .content-section p {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+        
+        .viz-section ul, .content-section ul {
+            margin: 20px 0 20px 40px;
+            color: var(--text-secondary);
+        }
+        
+        .viz-section li, .content-section li {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+        
+        .viz-section li strong, .content-section li strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
         .viz-container {
-            background: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(20px);
         }
         
         .interpretation {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 5px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid var(--primary);
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
         }
         
         .interpretation h3 {
-            color: #856404;
-            margin-bottom: 10px;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
         }
         
         .interpretation p {
-            line-height: 1.6;
-            color: #333;
+            color: var(--text-secondary);
         }
         
         canvas {
@@ -115,10 +201,11 @@
         
         /* Network visualization specific styles */
         #network {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             min-height: 700px;
+            backdrop-filter: blur(20px);
         }
         
         .node {
@@ -131,18 +218,18 @@
         }
         
         .node.highlighted {
-            stroke: #000;
+            stroke: var(--accent);
             stroke-width: 3px;
         }
         
         .link {
-            stroke: #999;
+            stroke: var(--text-muted);
             stroke-opacity: 0.6;
             transition: all 0.3s ease;
         }
         
         .link.highlighted {
-            stroke: #555;
+            stroke: var(--primary);
             stroke-opacity: 1;
             stroke-width: 3px;
         }
@@ -155,19 +242,23 @@
             font-size: 11px;
             font-weight: 600;
             pointer-events: none;
-            text-shadow: 0 1px 2px white, 1px 0 2px white, -1px 0 2px white, 0 -1px 2px white;
+            fill: var(--text-primary);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         }
         
         .legend {
             position: absolute;
             top: 30px;
             right: 30px;
-            background: white;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
             padding: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             font-size: 13px;
             z-index: 10;
+            color: var(--text-primary);
         }
         
         .legend-item {
@@ -181,61 +272,74 @@
             height: 16px;
             border-radius: 50%;
             margin-right: 8px;
-            border: 2px solid #333;
+            border: 2px solid var(--border);
         }
         
         .tooltip-viz {
             position: absolute;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.85);
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.9);
             color: white;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 12px;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.2s;
             max-width: 200px;
             z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .network-instructions {
             text-align: center;
-            color: #666;
+            color: var(--text-secondary);
             font-size: 13px;
             margin: 15px 0;
-            padding: 10px;
-            background: #e3f2fd;
-            border-radius: 5px;
+            padding: 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
         
         footer {
-            background: #333;
-            color: white;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            padding: 40px 20px;
             text-align: center;
-            padding: 20px;
-            font-size: 0.9em;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer p {
+            margin: 8px 0;
+            font-size: 1em;
         }
         
         .key-findings {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 5px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%);
+            border-left: 4px solid var(--success);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
         }
         
         .key-findings h3 {
-            color: #2e7d32;
-            margin-bottom: 15px;
+            color: var(--success);
+            margin-top: 0;
+            margin-bottom: 20px;
         }
         
         .key-findings ul {
             list-style-position: inside;
             line-height: 1.8;
+            color: var(--text-secondary);
         }
         
         .key-findings li {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         #network-container {
@@ -243,15 +347,49 @@
         }
         
         .interactive-note {
-            background: #e3f2fd;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
             padding: 15px;
             margin-top: 15px;
-            border-radius: 5px;
+            border-radius: 12px;
             font-size: 0.9em;
+            color: var(--text-secondary);
         }
         
         .interactive-note strong {
-            color: #1976d2;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            
+            header p {
+                font-size: 1.1em;
+            }
+            
+            .viz-section, .content-section {
+                padding: 40px 20px;
+            }
+            
+            .viz-section h2, .content-section h2 {
+                font-size: 1.8em;
+            }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
         }
     </style>
 </head>
