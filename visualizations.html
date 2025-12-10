@@ -171,9 +171,7 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 30px;
-            margin: 30px auto;
-            max-width: 900px;
-            width: 100%;
+            margin: 30px 0;
             backdrop-filter: blur(20px);
         }
         
@@ -208,13 +206,6 @@
             border-radius: 16px;
             min-height: 700px;
             backdrop-filter: blur(20px);
-        }
-
-        /* Make the D3 SVG responsive */
-        #network svg {
-            width: 100%;
-            height: auto;
-            display: block;
         }
         
         .node {
@@ -538,7 +529,7 @@
                 <div class="heatmap-legend">
                     <div class="heatmap-legend-bar"></div>
                     <div class="heatmap-legend-labels">
-                        <span>Weak</span>
+                        <<span>Weak</span>
                         <span>Moderate</span>
                         <span>Strong</span>
                     </div>
@@ -729,7 +720,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: 2,
+                aspectRatio: 1,
                 plugins: {
                     title: {
                         display: true,
@@ -825,14 +816,14 @@
         
         const networkData = { nodes, links };
         
-        const networkContainer = document.getElementById('network');
-        const width = Math.min(800, networkContainer.clientWidth || 800);
-        const height = 0.7 * width;
-
+        const width = 1000;
+        const height = 700;
+        
         const svg = d3.select("#network")
             .append("svg")
+            .attr("width", width)
+            .attr("height", height)
             .attr("viewBox", [0, 0, width, height]);
-            .attr("preserveAspectRatio", "xMidYMid meet");
         
         const colorScale = d3.scaleOrdinal()
             .domain(["equity", "crypto", "driver"])
