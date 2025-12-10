@@ -391,6 +391,36 @@
             background: var(--primary);
             border-radius: 5px;
         }
+
+        /* Heatmap Legend Styles */
+        .heatmap-legend {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .heatmap-legend-bar {
+            width: 280px;
+            height: 18px;
+            border-radius: 4px;
+            margin: 0 auto 6px;
+            background: linear-gradient(
+                to right,
+                rgba(33,150,243,1),   /* blue for negative */
+                rgba(255,255,255,1),  /* white for zero */
+                rgba(244,67,54,1)     /* red for positive */
+            );
+            border: 1px solid var(--border);
+        }
+
+        .heatmap-legend-labels {
+            width: 280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
     </style>
 </head>
 <body>
@@ -495,7 +525,16 @@
             
             <div class="viz-container">
                 <canvas id="correlationChart"></canvas>
-            </div>
+
+                <div class="heatmap-legend">
+                    <div class="heatmap-legend-bar"></div>
+                    <div class="heatmap-legend-labels">
+                        <span>-1 (Negative)</span>
+                        <span>0</span>
+                        <span>+1 (Positive)</span>
+                    </div>
+             </div>
+        </div>
             
             <div class="interpretation">
                 <h3>🔗 Interpretation</h3>
