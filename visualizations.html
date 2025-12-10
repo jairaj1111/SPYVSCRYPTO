@@ -608,7 +608,7 @@
         const volatilitySpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "data": {"url": "volatility_data.csv"},
-            "mark": {"type": "boxplot", "size": 50},
+            "mark": {"type": "boxplot", "size": 50, "color": "#4F46E5"  },
             "encoding": {
                 "x": {
                     "field": "Ticker",
@@ -623,14 +623,9 @@
                     "title": "30-Day Rolling Volatility",
                     "scale": {"domain": [0, 0.15]}
                 },
-                "color": {
-                    "field": "Ticker",
-                    "type": "nominal",
-                    "scale": {"scheme": "category10"},
-                    "legend": {"title": "Asset"}
-                }
+
             },
-            "width": 700,
+            "width": 800,
             "height": 400,
             "title": "Volatility Distribution Comparison"
         };
