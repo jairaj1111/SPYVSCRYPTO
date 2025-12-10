@@ -405,9 +405,10 @@
             margin: 0 auto 6px;
             background: linear-gradient(
                 to right,
-                rgba(33,150,243,1),   /* blue for negative */
-                rgba(255,255,255,1),  /* white for zero */
-                rgba(244,67,54,1)     /* red for positive */
+                rgba(244, 67, 54, 0.1),
+                rgba(244, 67, 54, 0.4),
+                rgba(244, 67, 54, 0.7),
+                rgba(244, 67, 54, 1)
             );
             border: 1px solid var(--border);
         }
@@ -528,9 +529,9 @@
                 <div class="heatmap-legend">
                     <div class="heatmap-legend-bar"></div>
                     <div class="heatmap-legend-labels">
-                        <span>-1 (Negative)</span>
-                        <span>0</span>
-                        <span>+1 (Positive)</span>
+                        <<span>Weak</span>
+                        <span>Moderate</span>
+                        <span>Strong</span>
                     </div>
                  </div>
             </div>
