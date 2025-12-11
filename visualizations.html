@@ -475,50 +475,57 @@
             </p>
         </div>
         
-        <!-- Visualization 1: Market Performance Over Time & Visualization 5: Network Map -->
+        <!-- Visualization 1: Market Performance Over Time -->
         <div class="viz-section">
-            <h2>1. Market Performance Over Time & Drivers Network Map</h2>
-            <p class="subtitle">Normalized closing prices with interactive filtering and the network of asset-driver relationships</p>
+            <h2>1. Market Performance Over Time</h2>
+            <p class="subtitle">Normalized closing prices with interactive filtering and zoom</p>
             
-            <div class="viz-row">
-                <div class="viz-container">
-                    <div id="timeSeriesChart"></div>
-                    <div class="interactive-note">
-                        <strong>🎮 Interactive Features:</strong> 
-                        <span style="color: #1976d2;">Click legend to toggle assets</span> • 
-                        <span style="color: #1976d2;">Drag on chart to highlight time periods</span> • 
-                        Hover for detailed tooltips
-                    </div>
-                </div>
-                
-                <div class="viz-container">
-                    <div class="network-instructions" style="margin-bottom: 15px;">
-                        <strong>🎯 Interactive Features:</strong> Hover over nodes to highlight connections • Click to focus • 
-                        Drag nodes to reposition
-                    </div>
-                    <div id="network-container">
-                        <div id="network"></div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: #2196F3;"></div>
-                            <span>Cryptocurrency</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: #FF9800;"></div>
-                            <span>Driver/Company</span>
-                        </div>
-                    </div>
-                    <div class="tooltip-viz" id="tooltip"></div>
+            <div class="viz-container">
+                <div id="timeSeriesChart"></div>
+                <div class="interactive-note">
+                    <strong>🎮 Interactive Features:</strong> 
+                    <span style="color: #1976d2;">Click legend to toggle assets</span> • 
+                    <span style="color: #1976d2;">Drag on chart to highlight time periods</span> • 
+                    Hover for detailed tooltips
                 </div>
             </div>
             
             <div class="interpretation">
                 <h3>📈 Interpretation</h3>
-                <p><strong>Figure 1: Normalized Market Performance Over Time & Drivers Network Map</strong> – These visualizations show five years of relative price performance and the relationships between assets and their key drivers.</p>
-                <p>Figure 1 (left) shows how SPY and the five cryptocurrencies changed over time after normalizing all assets to the same starting point. SPY stays within a steady band throughout the five-year period, while all cryptocurrencies show much sharper climbs and declines. For example, BTC, ETH, and BNB rise quickly during the 2021 bull market, then drop sharply during the 2022 crypto crash that followed events like the Terra collapse in May 2022 (marked by the vertical dashed lines). XRP and LTC show large swings during the same periods, although at different magnitudes. Some of these movements line up with market-wide events, such as the downturn in early 2022, while other periods show crypto moving independently, especially during crypto-specific shocks.</p>
-                <p>The network map (right) links each cryptocurrency to the companies and organizations that influence it. BTC connects to drivers like MicroStrategy and Coinbase, reflecting how corporate adoption and exchange activity have shaped its price. XRP connects strongly to Ripple, which aligns with market reactions to Ripple's legal developments. Several assets share ties with Coinbase and Binance, which helps explain why exchange-related events, such as the 2022 Binance–FTX fallout, affected multiple coins at the same time.</p>
+                <p><strong>Figure 1: Normalized Market Performance Over Time</strong> – This figure shows five years of relative price performance for SPY and major cryptocurrencies.</p>
+                <p>Figure 1 shows how SPY and the five cryptocurrencies changed over time after normalizing all assets to the same starting point. SPY stays within a steady band throughout the five-year period, while all cryptocurrencies show much sharper climbs and declines. For example, BTC, ETH, and BNB rise quickly during the 2021 bull market, then drop sharply during the 2022 crypto crash that followed events like the Terra collapse in May 2022 (marked by the vertical dashed lines). XRP and LTC show large swings during the same periods, although at different magnitudes. Some of these movements line up with market-wide events, such as the downturn in early 2022, while other periods show crypto moving independently, especially during crypto-specific shocks. This figure helps answer our first two research questions by highlighting the stronger volatility in crypto and showing that the connection between crypto and the stock market varies depending on the period.</p>
+            </div>
+        </div>
+        
+        <!-- Visualization 2: Drivers Network Map -->
+        <div class="viz-section">
+            <h2>2. Drivers Network Map</h2>
+            <p class="subtitle">Force-directed network showing asset-driver relationships</p>
+            
+            <div class="network-instructions">
+                <strong>🎯 Interactive Features:</strong> Hover over nodes to highlight connections • Click to focus • 
+                Drag nodes to reposition
+            </div>
+            
+            <div class="viz-container">
+                <div id="network-container">
+                    <div id="network"></div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2196F3;"></div>
+                        <span>Cryptocurrency</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FF9800;"></div>
+                        <span>Driver/Company</span>
+                    </div>
+                </div>
+                <div class="tooltip-viz" id="tooltip"></div>
             </div>
             
             <div class="key-findings">
+                <h3>🔑 Interpretation</h3>
+                <p><strong>Figure 2: Drivers Network Map</strong> – This figure maps each asset to the companies and platforms most associated with it.</p>
+                <p>Figure 2 links each cryptocurrency to the companies and organizations that influence it. BTC connects to drivers like MicroStrategy and Coinbase, reflecting how corporate adoption and exchange activity have shaped its price. XRP connects strongly to Ripple, which aligns with market reactions to Ripple's legal developments. Several assets share ties with Coinbase and Binance, which helps explain why exchange-related events, such as the 2022 Binance–FTX fallout, affected multiple coins at the same time. This figure supports the third research question by showing how shocks linked to specific companies or platforms can trigger large market movements.</p>
                 <h3>🔑 Key Insights from Network Structure</h3>
                 <ul>
                     <li><strong>Coinbase as Central Hub:</strong> Connected to 4 out of 5 cryptocurrencies, highlighting its role 
@@ -535,9 +542,9 @@
             </div>
         </div>
         
-        <!-- Visualization 2: Volatility Distribution -->
+        <!-- Visualization 3: Volatility Distribution -->
         <div class="viz-section">
-            <h2>2. Volatility Distribution Comparison</h2>
+            <h2>3. Volatility Distribution Comparison</h2>
             <p class="subtitle">30-day rolling volatility with interactive selection</p>
             
             <div class="viz-container">
@@ -546,14 +553,14 @@
             
             <div class="interpretation">
                 <h3>📊 Interpretation</h3>
-                <p><strong>Figure 2: Volatility Distribution Across Assets</strong> – This figure compares 30-day rolling volatility across SPY and five cryptocurrencies.</p>
-                <p>Figure 2 summarizes the 30-day rolling volatility for each asset. SPY has the lowest and tightest volatility values, centered near 0.01. All five cryptocurrencies show much wider and higher distributions. ETH, XRP, and LTC display the most frequent high-volatility periods, reflecting major swings during 2021 and throughout the 2022 crypto downturn. Even BTC and BNB, which appear more stable than the other coins, still sit well above SPY. This figure directly answers the first research question by making it clear that every cryptocurrency in the dataset is significantly more volatile than the S&P 500.</p>
+                <p><strong>Figure 3: Volatility Distribution Across Assets</strong> – This figure compares 30-day rolling volatility across SPY and five cryptocurrencies.</p>
+                <p>Figure 3 summarizes the 30-day rolling volatility for each asset. SPY has the lowest and tightest volatility values, centered near 0.01. All five cryptocurrencies show much wider and higher distributions. ETH, XRP, and LTC display the most frequent high-volatility periods, reflecting major swings during 2021 and throughout the 2022 crypto downturn. Even BTC and BNB, which appear more stable than the other coins, still sit well above SPY. This figure directly answers the first research question by making it clear that every cryptocurrency in the dataset is significantly more volatile than the S&P 500.</p>
             </div>
         </div>
         
-        <!-- Visualization 3: Volume-Price Relationship -->
+        <!-- Visualization 4: Volume-Price Relationship -->
         <div class="viz-section">
-            <h2>3. Volume–Price Relationship</h2>
+            <h2>4. Volume–Price Relationship</h2>
             <p class="subtitle">Trading volume vs. price with brush selection and dynamic regression</p>
             
             <div class="viz-container">
@@ -569,17 +576,17 @@
             
             <div class="interpretation">
                 <h3>💹 Interpretation</h3>
-                <p><strong>Figure 3: Volume–Price Relationship with Interactive Zoom and Filtering</strong> – This figure shows the relationship between trading volume and average price with interactive zoom and filtering.</p>
-                <p>Figure 3 compares trading volume to the average of daily high and low price for each asset. When focusing on BTC using the filtering tool, periods of high trading volume often match with surges in price, especially during the 2021 bull market when rising prices brought in heavy trading activity. Volume spikes also appear during major declines in mid-2022, when fear-driven selling increased activity across the market. These patterns relate to our third research question by showing how major events lead to both dramatic price movements and noticeable increases in trading volume.</p>
+                <p><strong>Figure 4: Volume–Price Relationship with Interactive Zoom and Filtering</strong> – This figure shows the relationship between trading volume and average price with interactive zoom and filtering.</p>
+                <p>Figure 4 compares trading volume to the average of daily high and low price for each asset. When focusing on BTC using the filtering tool, periods of high trading volume often match with surges in price, especially during the 2021 bull market when rising prices brought in heavy trading activity. Volume spikes also appear during major declines in mid-2022, when fear-driven selling increased activity across the market. These patterns relate to our third research question by showing how major events lead to both dramatic price movements and noticeable increases in trading volume.</p>
             </div>
         </div>
         
-        <!-- Visualization 4: Asset Correlation Heatmap -->
+        <!-- Visualization 5: Asset Correlation Heatmap -->
         <div class="viz-section">
-            <h2>4. Asset Correlation Heatmap</h2>
+            <h2>5. Asset Correlation Heatmap</h2>
             <p class="subtitle">Daily return correlations between all assets</p>
             
-            <div class="viz-container">
+            <div class="viz-container" style="max-width: 600px; margin: 30px auto;">
                 <canvas id="correlationChart"></canvas>
                 <div class="heatmap-legend">
                     <div class="heatmap-legend-bar"></div>
@@ -593,8 +600,8 @@
             
             <div class="interpretation">
                 <h3>🔗 Interpretation</h3>
-                <p><strong>Figure 4: Daily Return Correlation Heatmap</strong> – This figure shows correlations between daily returns for SPY and the five cryptocurrencies.</p>
-                <p>Figure 4 shows that cryptocurrencies have relatively strong correlations with one another, especially BTC, ETH, LTC, and BNB. Their correlations with SPY are moderate, which means crypto and the stock market only move together to a limited extent. XRP stands out with weaker correlations to both SPY and the other coins. This figure answers the second research question by showing that the connection between crypto and the stock market exists but is not stable or strong. It also supports the idea seen in Figure 1 that crypto sometimes moves with broader market trends, such as during early 2022, but often shows independent behavior during crypto-specific events.</p>
+                <p><strong>Figure 5: Daily Return Correlation Heatmap</strong> – This figure shows correlations between daily returns for SPY and the five cryptocurrencies.</p>
+                <p>Figure 5 shows that cryptocurrencies have relatively strong correlations with one another, especially BTC, ETH, LTC, and BNB. Their correlations with SPY are moderate, which means crypto and the stock market only move together to a limited extent. XRP stands out with weaker correlations to both SPY and the other coins. This figure answers the second research question by showing that the connection between crypto and the stock market exists but is not stable or strong. It also supports the idea seen in Figure 1 that crypto sometimes moves with broader market trends, such as during early 2022, but often shows independent behavior during crypto-specific events.</p>
             </div>
         </div>
         
@@ -826,15 +833,14 @@
         
         const networkData = { nodes, links };
         
-        const width = 550;
-        const height = 450;
+        const width = 1000;
+        const height = 700;
         
         const svg = d3.select("#network")
             .append("svg")
-            .attr("width", "100%")
+            .attr("width", width)
             .attr("height", height)
-            .attr("viewBox", [0, 0, width, height])
-            .attr("preserveAspectRatio", "xMidYMid meet");
+            .attr("viewBox", [0, 0, width, height]);
         
         const colorScale = d3.scaleOrdinal()
             .domain(["equity", "crypto", "driver"])
