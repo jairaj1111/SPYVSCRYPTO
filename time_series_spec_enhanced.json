@@ -16675,6 +16675,32 @@
   "layer": [
     {
       "data": {
+        "values": [
+          {"event": "2021 Bull Run Peak", "date": "2021-11-10"},
+          {"event": "Terra Collapse", "date": "2022-05-09"},
+          {"event": "FTX Collapse", "date": "2022-11-08"},
+          {"event": "Market Stress", "date": "2022-01-24"}
+        ]
+      },
+      "layer": [
+        {
+          "mark": {"type": "rule", "strokeDash": [5, 5], "color": "#FF6B6B", "strokeWidth": 2, "opacity": 0.7},
+          "encoding": {
+            "x": {"field": "date", "type": "temporal"}
+          }
+        },
+        {
+          "mark": {"type": "text", "align": "left", "dx": 5, "dy": -5, "fontSize": 10, "fontWeight": "bold", "color": "#FF6B6B"},
+          "encoding": {
+            "x": {"field": "date", "type": "temporal"},
+            "y": {"value": 10},
+            "text": {"field": "event", "type": "nominal"}
+          }
+        }
+      ]
+    },
+    {
+      "data": {
         "name": "data-f9a313dfdc4ee6fe19eda13631bde342"
       },
       "encoding": {
