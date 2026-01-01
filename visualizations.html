@@ -1,53 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DS4200: Cryptocurrency vs Stock Market Analysis</title>
-    
+
     <!-- D3.js for network visualization -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
+
     <!-- Vega and Vega-Lite for Altair charts -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    
+
     <!-- Chart.js for matplotlib-style charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
+    <!-- React for Particles -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --accent: #f093fb;
-            --success: #10b981;
-            --bg-dark: #0a0e1a;
-            --bg-darker: #050810;
-            --bg-card: rgba(20, 25, 40, 0.6);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
+            /* SPY (Stock Market) colors */
+            --spy-blue: #1E40AF;
+            --spy-green: #10B981;
+            --spy-gold: #F59E0B;
+            --spy-glow: rgba(30, 64, 175, 0.4);
+
+            /* Crypto colors */
+            --crypto-purple: #8B5CF6;
+            --crypto-cyan: #06B6D4;
+            --crypto-pink: #EC4899;
+            --crypto-glow: rgba(139, 92, 246, 0.4);
+
+            /* Enhanced dark theme */
+            --bg-primary: #050816;
+            --bg-secondary: #0A0E1A;
+            --bg-tertiary: #0F1420;
+            --bg-card: rgba(15, 20, 32, 0.85);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --bg-glass-hover: rgba(255, 255, 255, 0.06);
+
+            /* Text colors */
+            --text-primary: #F8FAFC;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+            --text-accent: #A78BFA;
+
+            /* Border & effects */
             --border: rgba(255, 255, 255, 0.08);
+            --border-bright: rgba(139, 92, 246, 0.3);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 20px rgba(139, 92, 246, 0.4);
         }
-        
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-darker);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.8;
             overflow-x: hidden;
+            position: relative;
         }
-        
+
+        /* Enhanced Particles Background */
+        #particles-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Mesh & Grid Background */
         body::before {
             content: '';
             position: fixed;
@@ -55,458 +98,902 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.1) 0%, transparent 70%);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15), transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
         }
-        
+
+        /* Decorative Glowing Blobs */
+        .blob {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--crypto-glow), transparent 70%);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.3;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-1 {
+            top: -100px;
+            left: -100px;
+            background: radial-gradient(circle, var(--spy-glow), transparent 70%);
+        }
+
+        .blob-2 {
+            bottom: -100px;
+            right: 10%;
+            background: radial-gradient(circle, var(--crypto-glow), transparent 70%);
+        }
+
+        @keyframes move {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(100px, 100px) scale(1.2);
+            }
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
-        
+
+        /* Enhanced Header */
         header {
             text-align: center;
-            padding: 100px 40px 80px;
+            padding: 120px 40px 100px;
+            position: relative;
+            backdrop-filter: blur(30px);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+            filter: blur(120px);
+            z-index: -1;
+            animation: headerPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes headerPulse {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.4;
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        /* Decorative elements around header */
+        header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            animation: rotate 30s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #40ffaa 0%, #4079ff 30%, #c850c0 60%, #40ffaa 100%);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -3px;
+            margin-bottom: 25px;
+            animation: gradientSlide 8s linear infinite;
+            text-transform: uppercase;
+            position: relative;
+            filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.5));
+        }
+
+        @keyframes gradientSlide {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 300% center;
+            }
+        }
+
+        h1,
+        h2,
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        header p {
+            font-size: 1.5em;
+            color: var(--text-accent);
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        /* Subtitle badge */
+        .header-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--crypto-purple), var(--crypto-blue));
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            box-shadow: var(--glow);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* VS Badge */
+        .vs-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--spy-blue), var(--crypto-purple));
+            border-radius: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 0.5em;
+            /* Scaled for h1 */
+            letter-spacing: 2px;
+            color: white;
+            margin: 0 15px;
+            vertical-align: middle;
+            transform: skewX(-15deg);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Enhanced Sections */
+        .viz-section,
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            border-bottom: 1px solid var(--border);
             position: relative;
         }
-        
-        header::before {
+
+        .viz-section::before {
             content: '';
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100%;
+            width: 300px;
             height: 300px;
-            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.25) 0%, transparent 70%);
+            background: radial-gradient(circle, var(--crypto-purple) 0%, transparent 70%);
+            opacity: 0.05;
             filter: blur(80px);
-            z-index: -1;
+            pointer-events: none;
         }
-        
-        header h1 {
-            font-size: 3.5em;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-        }
-        
-        header p {
-            font-size: 1.4em;
-            color: var(--text-secondary);
-            font-weight: 300;
-            letter-spacing: 0.5px;
-        }
-        
-        .viz-section, .content-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 40px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .viz-section:last-child, .content-section:last-child {
+
+        .viz-section:last-child,
+        .content-section:last-child {
             border-bottom: none;
         }
-        
-        .viz-section h2, .content-section h2 {
-            font-size: 2.2em;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+
+        .viz-section h2,
+        .content-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--crypto-purple) 0%, var(--crypto-pink) 50%, var(--crypto-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 25px;
-            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
         }
-        
+
+        .viz-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--crypto-purple), transparent);
+            border-radius: 2px;
+        }
+
         .viz-section .subtitle {
-            color: var(--text-muted);
+            color: var(--text-accent);
             font-style: italic;
-            margin-bottom: 20px;
-            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-size: 1.15em;
+            font-weight: 500;
         }
-        
-        .viz-section h3, .content-section h3 {
-            color: var(--accent);
-            font-size: 1.5em;
-            font-weight: 600;
-            margin: 30px 0 15px;
+
+        .viz-section h3,
+        .content-section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--crypto-cyan);
+            font-size: 1.6em;
+            font-weight: 700;
+            margin: 40px 0 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        .viz-section p, .content-section p {
+
+        .viz-section p,
+        .content-section p {
             color: var(--text-secondary);
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            line-height: 1.9;
+            font-size: 1.15em;
+            margin-bottom: 25px;
+            line-height: 2;
         }
-        
-        .viz-section ul, .content-section ul {
-            margin: 20px 0 20px 40px;
+
+        .viz-section ul,
+        .content-section ul {
+            margin: 25px 0 25px 40px;
             color: var(--text-secondary);
         }
-        
-        .viz-section li, .content-section li {
-            margin-bottom: 15px;
-            font-size: 1.05em;
-            line-height: 1.7;
+
+        .viz-section li,
+        .content-section li {
+            margin-bottom: 18px;
+            font-size: 1.1em;
+            line-height: 1.8;
+            position: relative;
+            padding-left: 15px;
         }
-        
-        .viz-section li strong, .content-section li strong {
+
+        .viz-section li::before,
+        .content-section li::before {
+            content: '▸';
+            position: absolute;
+            left: -20px;
+            color: var(--crypto-purple);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .viz-section li strong,
+        .content-section li strong {
             color: var(--text-primary);
-            font-weight: 600;
+            font-weight: 700;
         }
-        
+
+        /* Enhanced Visualization Container */
         .viz-container {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
-            margin: 30px 0;
-            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            backdrop-filter: blur(30px);
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        /* Animated border gradient */
+        .viz-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg,
+                    var(--spy-blue),
+                    var(--spy-green),
+                    var(--crypto-purple),
+                    var(--crypto-cyan));
+            background-size: 300% 300%;
+            border-radius: 24px;
+            z-index: -1;
+            opacity: 0.2;
+            transition: opacity 0.4s ease;
+            animation: gradientRotate 10s linear infinite;
+        }
+
+        @keyframes gradientRotate {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .viz-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.3);
+        }
+
+        .viz-container:hover::before {
+            opacity: 1;
+        }
+
+        /* Enhanced Interpretation Box */
         .interpretation {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-left: 4px solid var(--primary);
-            padding: 30px;
-            margin-top: 30px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, var(--bg-glass) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border: 1px solid var(--border-bright);
+            border-left: 5px solid var(--crypto-purple);
+            padding: 35px;
+            margin-top: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(30px);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .interpretation::before {
+            content: '💡';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            opacity: 0.3;
+        }
+
         .interpretation h3 {
-            color: var(--primary);
+            color: var(--crypto-purple);
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
         }
-        
-        .interpretation p {
-            color: var(--text-secondary);
+
+        /* Enhanced Key Findings Box */
+        .key-findings {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-left: 5px solid var(--success);
+            padding: 35px;
+            margin: 40px 0;
+            border-radius: 20px;
+            backdrop-filter: blur(30px);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .key-findings::before {
+            content: '🔑';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            opacity: 0.3;
+        }
+
+        .key-findings h3 {
+            color: var(--success);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+        }
+
+        .key-findings ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-findings li {
+            margin-bottom: 18px;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .key-findings li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.3em;
+            background: rgba(16, 185, 129, 0.15);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--success);
+        }
+
         canvas {
             max-width: 100%;
             height: auto;
         }
-        
-        /* Network visualization specific styles */
+
+        /* Enhanced Network visualization styles */
         #network {
-            background-color: var(--bg-card);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(15, 20, 32, 0.9) 100%);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 24px;
             min-height: 700px;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
+            position: relative;
         }
-        
+
         .node {
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
-        
+
         .node:hover {
-            stroke-width: 3px;
+            filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.6));
         }
-        
+
         .node.highlighted {
-            stroke: var(--accent);
-            stroke-width: 3px;
+            stroke: var(--crypto-cyan);
+            stroke-width: 4px;
+            filter: drop-shadow(0 0 15px var(--crypto-cyan));
         }
-        
+
         .link {
             stroke: var(--text-muted);
-            stroke-opacity: 0.6;
+            stroke-opacity: 0.5;
             transition: all 0.3s ease;
         }
-        
+
         .link.highlighted {
-            stroke: var(--primary);
+            stroke: var(--crypto-purple);
             stroke-opacity: 1;
-            stroke-width: 3px;
+            stroke-width: 4px;
+            filter: drop-shadow(0 0 8px var(--crypto-purple));
         }
-        
+
         .link.dimmed {
-            stroke-opacity: 0.1;
+            stroke-opacity: 0.08;
         }
-        
+
         .node-label {
-            font-size: 11px;
-            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
             pointer-events: none;
             fill: var(--text-primary);
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
         }
-        
-        .legend {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            font-size: 13px;
-            z-index: 10;
-            color: var(--text-primary);
-        }
-        
+
         .legend-item {
-            margin: 8px 0;
+            margin: 12px 0;
             display: flex;
             align-items: center;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
-        
+
         .legend-color {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            margin-right: 8px;
-            border: 2px solid var(--border);
+            margin-right: 12px;
+            border: 2px solid var(--border-bright);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
-        
+
         .tooltip-viz {
             position: absolute;
-            padding: 10px 14px;
-            background: rgba(0, 0, 0, 0.9);
+            padding: 16px 20px;
+            background: rgba(10, 14, 26, 0.98);
             color: white;
-            border-radius: 8px;
-            font-size: 12px;
+            border-radius: 16px;
+            font-size: 13px;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.2s;
-            max-width: 200px;
+            transition: opacity 0.3s;
+            max-width: 220px;
             z-index: 100;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--crypto-purple);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
-        
+
+        /* Enhanced Interactive Notes */
+        .interactive-note {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 16px;
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--crypto-cyan), var(--crypto-blue));
+        }
+
+        .interactive-note strong {
+            color: var(--crypto-cyan);
+            font-weight: 700;
+        }
+
         .network-instructions {
             text-align: center;
             color: var(--text-secondary);
-            font-size: 13px;
-            margin: 15px 0;
-            padding: 15px;
+            font-size: 14px;
+            margin: 20px 0;
+            padding: 20px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-        }
-        
-        footer {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.95em;
-            border-top: 1px solid var(--border);
-        }
-        
-        footer p {
-            margin: 8px 0;
-            font-size: 1em;
-        }
-        
-        .key-findings {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%);
-            border-left: 4px solid var(--success);
-            padding: 30px;
-            margin: 30px 0;
             border-radius: 16px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
         }
-        
-        .key-findings h3 {
-            color: var(--success);
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        
-        .key-findings ul {
-            list-style-position: inside;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-        
-        .key-findings li {
-            margin-bottom: 15px;
-        }
-        
-        #network-container {
-            position: relative;
-        }
-        
-        .viz-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 30px 0;
-        }
-        
-        .viz-row .viz-container {
-            margin: 0;
-        }
-        
-        @media (max-width: 1200px) {
-            .viz-row {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .interactive-note {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 12px;
-            font-size: 0.9em;
-            color: var(--text-secondary);
-        }
-        
-        .interactive-note strong {
-            color: var(--primary);
-        }
-        
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.5em;
-            }
-            
-            header p {
-                font-size: 1.1em;
-            }
-            
-            .viz-section, .content-section {
-                padding: 40px 20px;
-            }
-            
-            .viz-section h2, .content-section h2 {
-                font-size: 1.8em;
-            }
-        }
-        
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--bg-darker);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 5px;
+
+        .network-instructions strong {
+            color: var(--crypto-cyan);
+            font-weight: 700;
         }
 
         /* Heatmap Legend Styles */
         .heatmap-legend {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: center;
         }
 
         .heatmap-legend-bar {
-            width: 280px;
-            height: 18px;
-            border-radius: 4px;
-            margin: 0 auto 6px;
-            background: linear-gradient(
-                to right,
-                rgba(244, 67, 54, 0.1),
-                rgba(244, 67, 54, 0.4),
-                rgba(244, 67, 54, 0.7),
-                rgba(244, 67, 54, 1)
-            );
-            border: 1px solid var(--border);
+            width: 300px;
+            height: 20px;
+            border-radius: 10px;
+            margin: 0 auto 8px;
+            background: linear-gradient(to right,
+                    rgba(244, 67, 54, 0.1),
+                    rgba(244, 67, 54, 0.4),
+                    rgba(244, 67, 54, 0.7),
+                    rgba(244, 67, 54, 1));
+            border: 2px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .heatmap-legend-labels {
-            width: 280px;
+            width: 300px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: var(--text-secondary);
+            font-weight: 600;
         }
 
+        /* Enhanced Back to Intro Button */
+        .back-button {
+            position: fixed;
+            top: 35px;
+            left: 35px;
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--crypto-purple) 0%, var(--crypto-blue) 100%);
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05em;
+            font-weight: 700;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--crypto-purple), var(--crypto-cyan), var(--crypto-pink));
+            border-radius: 50px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(10px);
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 36px rgba(139, 92, 246, 0.7);
+        }
+
+        .back-button:hover::before {
+            opacity: 1;
+        }
+
+        .back-button .arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .back-button:hover .arrow {
+            transform: translateX(-6px);
+        }
+
+        /* Enhanced Footer */
+        footer {
+            background: linear-gradient(180deg, transparent 0%, var(--bg-card) 100%);
+            backdrop-filter: blur(40px);
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1em;
+            border-top: 1px solid var(--border);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--crypto-purple), transparent);
+        }
+
+        footer p {
+            margin: 12px 0;
+            font-size: 1.05em;
+        }
+
+        footer p:first-child {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        #network-container {
+            position: relative;
+        }
+
+        /* Scrollbar Enhancement */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--crypto-purple) 0%, var(--crypto-blue) 100%);
+            border-radius: 10px;
+            border: 2px solid var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--crypto-blue) 0%, var(--crypto-cyan) 100%);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 80px 20px 60px;
+            }
+
+            header h1 {
+                font-size: 2.5em;
+                letter-spacing: -2px;
+            }
+
+            header p {
+                font-size: 1.2em;
+            }
+
+            .viz-section,
+            .content-section {
+                padding: 50px 20px;
+            }
+
+            .viz-container {
+                padding: 25px;
+                border-radius: 20px;
+            }
+
+            .back-button {
+                top: 20px;
+                left: 20px;
+                padding: 12px 22px;
+                font-size: 0.95em;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .loading {
+            background: linear-gradient(90deg, var(--bg-card) 0%, var(--bg-glass) 50%, var(--bg-card) 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
     </style>
 </head>
+
 <body>
+    <!-- Particles Background -->
+    <div id="particles-background"></div>
+
+    <!-- Back to Intro Button -->
+    <a href="index.html" class="back-button">
+        <span class="arrow">←</span>
+        <span>Back to Introduction</span>
+    </a>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
     <div class="container">
         <header>
-            <h1>📊 Cryptocurrency vs. Stock Market Analysis</h1>
-            <p>Comprehensive Visualization Dashboard - DS4200 Final Project</p>
+            <h1>SPY <span class="vs-badge">VS</span> CRYPTO</h1>
+            <p>Interactive Data Visualizations</p>
+            <div class="header-badge">Market Analysis Deep Dive</div>
         </header>
-        
+
         <!-- Visual Introduction Section -->
         <div class="viz-section">
             <h2>Visual Introduction</h2>
             <p>
-                Our visualizations move from a broad look at market behavior to detailed comparisons that help answer our research questions. Since crypto is known for reacting strongly to major market events, we organized the figures to highlight how these events show up in price, volatility, correlation, and trading activity.
+                Our visualizations move from a broad look at market behavior to detailed comparisons that help answer
+                our research questions. Since crypto is known for reacting strongly to major market events, we organized
+                the figures to highlight how these events show up in price, volatility, correlation, and trading
+                activity.
             </p>
             <p>
                 Across our analysis, we focus on several key events from the last five years:
             </p>
             <ul style="margin: 15px 0 15px 40px; line-height: 1.8;">
                 <li>The <strong>2021 crypto bull run</strong>, when BTC and ETH reached new highs</li>
-                <li>The <strong>Terra collapse in May 2022</strong>, which triggered a major drop across the crypto market</li>
+                <li>The <strong>Terra collapse in May 2022</strong>, which triggered a major drop across the crypto
+                    market</li>
                 <li>The broader <strong>2022 to 2023 crypto winter</strong>, marked by sharp declines</li>
                 <li>The <strong>FTX collapse in November 2022</strong>, which caused another wave of instability</li>
-                <li>Periods of <strong>global market stress</strong>, such as early 2022, when equity markets also declined</li>
+                <li>Periods of <strong>global market stress</strong>, such as early 2022, when equity markets also
+                    declined</li>
             </ul>
             <p>
-                These events are important because they help us understand when crypto moves with the stock market and when it moves independently.
+                These events are important because they help us understand when crypto moves with the stock market and
+                when it moves independently.
             </p>
             <p>
-                We start with overall price performance to see how strongly each asset moves over time. Then we compare their volatility, which directly answers how much more unstable crypto is compared to SPY. The volume–price plot helps us spot moments of intense trading around major events. The correlation heatmap shows when crypto and SPY move together. The drivers network map connects the assets to the companies or platforms that influence their behavior, which helps explain why certain events have such large effects.
+                We start with overall price performance to see how strongly each asset moves over time. Then we compare
+                their volatility, which directly answers how much more unstable crypto is compared to SPY. The
+                volume–price plot helps us spot moments of intense trading around major events. The correlation heatmap
+                shows when crypto and SPY move together. The drivers network map connects the assets to the companies or
+                platforms that influence their behavior, which helps explain why certain events have such large effects.
             </p>
             <p>
-                Together, these visualizations highlight how crypto reacts to major events, how it compares to the stock market, and how its behavior changes as the market shifts.
+                Together, these visualizations highlight how crypto reacts to major events, how it compares to the stock
+                market, and how its behavior changes as the market shifts.
             </p>
         </div>
-        
+
         <!-- Visualization 1: Market Performance Over Time -->
         <div class="viz-section">
             <h2>1. Market Performance Over Time</h2>
             <p class="subtitle">Normalized closing prices with interactive filtering and zoom</p>
-            
+
             <div class="viz-container">
-                <div id="timeSeriesChart"></div>
+                <div id="timeSeriesChart" class="loading" style="min-height: 400px;"></div>
                 <div class="interactive-note">
-                    <strong>🎮 Interactive Features:</strong> 
-                    <span style="color: #1976d2;">Click legend to toggle assets</span> • 
-                    <span style="color: #1976d2;">Drag on chart to highlight time periods</span> • 
+                    <strong>🎮 Interactive Features:</strong>
+                    <span>Click legend to toggle assets</span> •
+                    <span>Drag on chart to highlight time periods</span> •
                     Hover for detailed tooltips
                 </div>
             </div>
-            
+
             <div class="interpretation">
                 <h3>📈 Interpretation</h3>
-                <p><strong>Figure 1: Normalized Market Performance Over Time</strong> – This figure shows five years of relative price performance for SPY and major cryptocurrencies.</p>
-                <p>Figure 1 shows how SPY and the five cryptocurrencies changed over time after normalizing all assets to the same starting point. SPY stays within a steady band throughout the five-year period, while all cryptocurrencies show much sharper climbs and declines. For example, BTC, ETH, and BNB rise quickly during the 2021 bull market, then drop sharply during the 2022 crypto crash that followed events like the Terra collapse in May 2022 (marked by the vertical dashed lines). XRP and LTC show large swings during the same periods, although at different magnitudes. Some of these movements line up with market-wide events, such as the downturn in early 2022, while other periods show crypto moving independently, especially during crypto-specific shocks. This figure helps answer our first two research questions by highlighting the stronger volatility in crypto and showing that the connection between crypto and the stock market varies depending on the period.</p>
+                <p><strong>Figure 1: Normalized Market Performance Over Time</strong> – This figure shows five years of
+                    relative price performance for SPY and major cryptocurrencies.</p>
+                <p>Figure 1 shows how SPY and the five cryptocurrencies changed over time after normalizing all assets
+                    to the same starting point. SPY stays within a steady band throughout the five-year period, while
+                    all cryptocurrencies show much sharper climbs and declines. For example, BTC, ETH, and BNB rise
+                    quickly during the 2021 bull market, then drop sharply during the 2022 crypto crash that followed
+                    events like the Terra collapse in May 2022 (marked by the vertical dashed lines). XRP and LTC show
+                    large swings during the same periods, although at different magnitudes. Some of these movements line
+                    up with market-wide events, such as the downturn in early 2022, while other periods show crypto
+                    moving independently, especially during crypto-specific shocks. This figure helps answer our first
+                    two research questions by highlighting the stronger volatility in crypto and showing that the
+                    connection between crypto and the stock market varies depending on the period.</p>
             </div>
         </div>
-        
+
         <!-- Visualization 2: Drivers Network Map -->
         <div class="viz-section">
             <h2>2. Drivers Network Map</h2>
             <p class="subtitle">Force-directed network showing asset-driver relationships</p>
-            
+
             <div class="network-instructions">
-                <strong>🎯 Interactive Features:</strong> Hover over nodes to highlight connections • Click to focus • 
+                <strong>🎯 Interactive Features:</strong> Hover over nodes to highlight connections • Click to focus •
                 Drag nodes to reposition
             </div>
-            
+
             <div class="viz-container">
                 <div id="network-container">
                     <div id="network"></div>
@@ -521,72 +1008,100 @@
                 </div>
                 <div class="tooltip-viz" id="tooltip"></div>
             </div>
-            
+
             <div class="key-findings">
                 <h3>🔑 Interpretation</h3>
-                <p><strong>Figure 2: Drivers Network Map</strong> – This figure maps each asset to the companies and platforms most associated with it.</p>
-                <p>Figure 2 links each cryptocurrency to the companies and organizations that influence it. BTC connects to drivers like MicroStrategy and Coinbase, reflecting how corporate adoption and exchange activity have shaped its price. XRP connects strongly to Ripple, which aligns with market reactions to Ripple's legal developments. Several assets share ties with Coinbase and Binance, which helps explain why exchange-related events, such as the 2022 Binance–FTX fallout, affected multiple coins at the same time. This figure supports the third research question by showing how shocks linked to specific companies or platforms can trigger large market movements.</p>
+                <p><strong>Figure 2: Drivers Network Map</strong> – This figure maps each asset to the companies and
+                    platforms most associated with it.</p>
+                <p>Figure 2 links each cryptocurrency to the companies and organizations that influence it. BTC connects
+                    to drivers like MicroStrategy and Coinbase, reflecting how corporate adoption and exchange activity
+                    have shaped its price. XRP connects strongly to Ripple, which aligns with market reactions to
+                    Ripple's legal developments. Several assets share ties with Coinbase and Binance, which helps
+                    explain why exchange-related events, such as the 2022 Binance–FTX fallout, affected multiple coins
+                    at the same time. This figure supports the third research question by showing how shocks linked to
+                    specific companies or platforms can trigger large market movements.</p>
                 <h3>🔑 Key Insights from Network Structure</h3>
                 <ul>
-                    <li><strong>Coinbase as Central Hub:</strong> Connected to 4 out of 5 cryptocurrencies, highlighting its role 
-                    as critical infrastructure. Any regulatory or operational issues could create cascading effects across multiple 
-                    crypto assets simultaneously.</li>
-                    <li><strong>Binance's Dual Influence:</strong> Acts as both exchange platform and token issuer (BNB), creating 
-                    unique interdependency where its operational health affects multiple assets.</li>
-                    <li><strong>Structural Risk Concentration:</strong> Multiple cryptocurrencies depend on the same exchanges and 
-                    service providers, meaning a failure at one driver entity could create systemic risk across the entire crypto 
-                    portfolio.</li>
-                    <li><strong>Limited True Diversification:</strong> The shared infrastructure dependencies reveal that holding 
-                    multiple cryptocurrencies provides less diversification than price movements alone might suggest.</li>
+                    <li><strong>Coinbase as Central Hub:</strong> Connected to 4 out of 5 cryptocurrencies, highlighting
+                        its role
+                        as critical infrastructure. Any regulatory or operational issues could create cascading effects
+                        across multiple
+                        crypto assets simultaneously.</li>
+                    <li><strong>Binance's Dual Influence:</strong> Acts as both exchange platform and token issuer
+                        (BNB), creating
+                        unique interdependency where its operational health affects multiple assets.</li>
+                    <li><strong>Structural Risk Concentration:</strong> Multiple cryptocurrencies depend on the same
+                        exchanges and
+                        service providers, meaning a failure at one driver entity could create systemic risk across the
+                        entire crypto
+                        portfolio.</li>
+                    <li><strong>Limited True Diversification:</strong> The shared infrastructure dependencies reveal
+                        that holding
+                        multiple cryptocurrencies provides less diversification than price movements alone might
+                        suggest.</li>
                 </ul>
             </div>
         </div>
-        
+
         <!-- Visualization 3: Volatility Distribution -->
         <div class="viz-section">
             <h2>3. Volatility Distribution Comparison</h2>
             <p class="subtitle">30-day rolling volatility with interactive selection</p>
-            
+
             <div class="viz-container">
-                <div id="volatilityChart"></div>
+                <div id="volatilityChart" class="loading" style="min-height: 400px;"></div>
             </div>
-            
+
             <div class="interpretation">
                 <h3>📊 Interpretation</h3>
-                <p><strong>Figure 3: Volatility Distribution Across Assets</strong> – This figure compares 30-day rolling volatility across SPY and five cryptocurrencies.</p>
-                <p>Figure 3 summarizes the 30-day rolling volatility for each asset. SPY has the lowest and tightest volatility values, centered near 0.01. All five cryptocurrencies show much wider and higher distributions. ETH, XRP, and LTC display the most frequent high-volatility periods, reflecting major swings during 2021 and throughout the 2022 crypto downturn. Even BTC and BNB, which appear more stable than the other coins, still sit well above SPY. This figure directly answers the first research question by making it clear that every cryptocurrency in the dataset is significantly more volatile than the S&P 500.</p>
+                <p><strong>Figure 3: Volatility Distribution Across Assets</strong> – This figure compares 30-day
+                    rolling volatility across SPY and five cryptocurrencies.</p>
+                <p>Figure 3 summarizes the 30-day rolling volatility for each asset. SPY has the lowest and tightest
+                    volatility values, centered near 0.01. All five cryptocurrencies show much wider and higher
+                    distributions. ETH, XRP, and LTC display the most frequent high-volatility periods, reflecting major
+                    swings during 2021 and throughout the 2022 crypto downturn. Even BTC and BNB, which appear more
+                    stable than the other coins, still sit well above SPY. This figure directly answers the first
+                    research question by making it clear that every cryptocurrency in the dataset is significantly more
+                    volatile than the S&P 500.</p>
             </div>
         </div>
-        
+
         <!-- Visualization 4: Volume-Price Relationship -->
         <div class="viz-section">
             <h2>4. Volume–Price Relationship</h2>
             <p class="subtitle">Trading volume vs. price with brush selection and dynamic regression</p>
-            
+
             <div class="viz-container">
-                <div id="volumePriceChart"></div>
+                <div id="volumePriceChart" class="loading" style="min-height: 400px;"></div>
                 <div class="interactive-note">
-                    <strong>🎮 Interactive Features:</strong> 
-                    <span style="color: #1976d2;">Drag to select and zoom regions</span> • 
-                    <span style="color: #1976d2;">Click legend to filter assets</span> • 
-                    <span style="color: #1976d2;">Selected points enlarge</span> • 
+                    <strong>🎮 Interactive Features:</strong>
+                    <span>Drag to select and zoom regions</span> •
+                    <span>Click legend to filter assets</span> •
+                    <span>Selected points enlarge</span> •
                     Regression lines update dynamically
                 </div>
             </div>
-            
+
             <div class="interpretation">
                 <h3>💹 Interpretation</h3>
-                <p><strong>Figure 4: Volume–Price Relationship with Interactive Zoom and Filtering</strong> – This figure shows the relationship between trading volume and average price with interactive zoom and filtering.</p>
-                <p>Figure 4 compares trading volume to the average of daily high and low price for each asset. When focusing on BTC using the filtering tool, periods of high trading volume often match with surges in price, especially during the 2021 bull market when rising prices brought in heavy trading activity. Volume spikes also appear during major declines in mid-2022, when fear-driven selling increased activity across the market. These patterns relate to our third research question by showing how major events lead to both dramatic price movements and noticeable increases in trading volume.</p>
+                <p><strong>Figure 4: Volume–Price Relationship with Interactive Zoom and Filtering</strong> – This
+                    figure shows the relationship between trading volume and average price with interactive zoom and
+                    filtering.</p>
+                <p>Figure 4 compares trading volume to the average of daily high and low price for each asset. When
+                    focusing on BTC using the filtering tool, periods of high trading volume often match with surges in
+                    price, especially during the 2021 bull market when rising prices brought in heavy trading activity.
+                    Volume spikes also appear during major declines in mid-2022, when fear-driven selling increased
+                    activity across the market. These patterns relate to our third research question by showing how
+                    major events lead to both dramatic price movements and noticeable increases in trading volume.</p>
             </div>
         </div>
-        
+
         <!-- Visualization 5: Asset Correlation Heatmap -->
         <div class="viz-section">
             <h2>5. Asset Correlation Heatmap</h2>
             <p class="subtitle">Daily return correlations between all assets</p>
-            
-            <div class="viz-container" style="max-width: 600px; margin: 30px auto;">
+
+            <div class="viz-container" style="max-width: 650px; margin: 40px auto;">
                 <canvas id="correlationChart"></canvas>
                 <div class="heatmap-legend">
                     <div class="heatmap-legend-bar"></div>
@@ -595,115 +1110,268 @@
                         <span>Moderate</span>
                         <span>Strong</span>
                     </div>
-                 </div>
+                </div>
             </div>
-            
+
             <div class="interpretation">
                 <h3>🔗 Interpretation</h3>
-                <p><strong>Figure 5: Daily Return Correlation Heatmap</strong> – This figure shows correlations between daily returns for SPY and the five cryptocurrencies.</p>
-                <p>Figure 5 shows that cryptocurrencies have relatively strong correlations with one another, especially BTC, ETH, LTC, and BNB. Their correlations with SPY are moderate, which means crypto and the stock market only move together to a limited extent. XRP stands out with weaker correlations to both SPY and the other coins. This figure answers the second research question by showing that the connection between crypto and the stock market exists but is not stable or strong. It also supports the idea seen in Figure 1 that crypto sometimes moves with broader market trends, such as during early 2022, but often shows independent behavior during crypto-specific events.</p>
+                <p><strong>Figure 5: Daily Return Correlation Heatmap</strong> – This figure shows correlations between
+                    daily returns for SPY and the five cryptocurrencies.</p>
+                <p>Figure 5 shows that cryptocurrencies have relatively strong correlations with one another, especially
+                    BTC, ETH, LTC, and BNB. Their correlations with SPY are moderate, which means crypto and the stock
+                    market only move together to a limited extent. XRP stands out with weaker correlations to both SPY
+                    and the other coins. This figure answers the second research question by showing that the connection
+                    between crypto and the stock market exists but is not stable or strong. It also supports the idea
+                    seen in Figure 1 that crypto sometimes moves with broader market trends, such as during early 2022,
+                    but often shows independent behavior during crypto-specific events.</p>
             </div>
         </div>
-        
 
-        
         <div class="content-section">
             <h2>Conclusion</h2>
             <p>
-                Across all five visualizations, we were able to answer our research questions by examining how SPY and major cryptocurrencies behaved over the last five years. Our volatility comparison showed that every cryptocurrency in our dataset is much more volatile than the S&P 500. This supports what we saw in the normalized price chart, where assets like BTC, ETH, and BNB had large surges during the 2021 bull run and sharp declines during the 2022 crash, while SPY moved in a much tighter and steadier range.
+                Across all five visualizations, we were able to answer our research questions by examining how SPY and
+                major cryptocurrencies behaved over the last five years. Our volatility comparison showed that every
+                cryptocurrency in our dataset is much more volatile than the S&P 500. This supports what we saw in the
+                normalized price chart, where assets like BTC, ETH, and BNB had large surges during the 2021 bull run
+                and sharp declines during the 2022 crash, while SPY moved in a much tighter and steadier range.
             </p>
             <p>
-                We also found that the connection between crypto and the stock market shifts depending on the period. The correlation heatmap showed that cryptocurrencies move more closely with each other than with SPY. Some periods line up, such as early 2022 when both markets fell, but many movements are driven by crypto-specific events. The Terra collapse in May 2022 and the FTX collapse in November 2022 both triggered major drops across the crypto market. These patterns show how crypto volatility differs from traditional equity markets.
+                We also found that the connection between crypto and the stock market shifts depending on the period.
+                The correlation heatmap showed that cryptocurrencies move more closely with each other than with SPY.
+                Some periods line up, such as early 2022 when both markets fell, but many movements are driven by
+                crypto-specific events. The Terra collapse in May 2022 and the FTX collapse in November 2022 both
+                triggered major drops across the crypto market. These patterns show how crypto volatility differs from
+                traditional equity markets.
             </p>
             <p>
-                The volume and driver network visualizations help explain where these responses come from. Trading activity tends to increase during major swings, showing how sentiment and fear can accelerate price movement. The network map shows that many cryptocurrencies share ties to exchanges like Binance and Coinbase, which explains why events involving these companies often affect multiple coins at once.
+                The volume and driver network visualizations help explain where these responses come from. Trading
+                activity tends to increase during major swings, showing how sentiment and fear can accelerate price
+                movement. The network map shows that many cryptocurrencies share ties to exchanges like Binance and
+                Coinbase, which explains why events involving these companies often affect multiple coins at once.
             </p>
             <p>
-                Overall, we found that crypto is significantly more volatile, only loosely connected to the stock market, and highly sensitive to events within the crypto ecosystem. These findings help clarify how digital assets behave in comparison to traditional equities.
+                Overall, we found that crypto is significantly more volatile, only loosely connected to the stock
+                market, and highly sensitive to events within the crypto ecosystem. These findings help clarify how
+                digital assets behave in comparison to traditional equities.
             </p>
         </div>
-        
+
         <div class="content-section">
             <h2>Future Work</h2>
             <p>
-                For future analysis, there are several ways this project could be expanded to build on what we learned. One direction is to extend the time window beyond the past five years to see whether the relationship between crypto and SPY becomes stronger as the crypto market matures. Another is to include additional assets, such as stablecoins or sector-specific equity ETFs, to see whether certain categories of assets track crypto more closely than the overall market. It would also be useful to run event-based analysis around specific dates, such as policy announcements or exchange failures, to quantify how quickly shocks spread across assets.
+                For future analysis, there are several ways this project could be expanded to build on what we learned.
+                One direction is to extend the time window beyond the past five years to see whether the relationship
+                between crypto and SPY becomes stronger as the crypto market matures. Another is to include additional
+                assets, such as stablecoins or sector-specific equity ETFs, to see whether certain categories of assets
+                track crypto more closely than the overall market. It would also be useful to run event-based analysis
+                around specific dates, such as policy announcements or exchange failures, to quantify how quickly shocks
+                spread across assets.
             </p>
             <p>
-                Together, these extensions would help create a deeper understanding of how crypto fits into the broader financial landscape and whether its behavior is becoming more integrated with traditional markets.
+                Together, these extensions would help create a deeper understanding of how crypto fits into the broader
+                financial landscape and whether its behavior is becoming more integrated with traditional markets.
             </p>
         </div>
-        
+
         <footer>
-            <p>&copy; 2025 DS4200 Final Project | Cryptocurrency vs. Stock Market Volatility Analysis</p>
-            <p style="margin-top: 10px; font-size: 0.85em; opacity: 0.8;">
+            <p><strong>DS4200: INFORMATION VISUALIZATION</strong></p>
+            <p>Final Project | December 2025</p>
+            <p>Northeastern University | Khoury College of Computer Sciences</p>
+            <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.7;">
                 Data Source: Yahoo Finance (yfinance) | Visualization Tools: D3.js, Vega-Lite (Altair), Chart.js
             </p>
         </footer>
     </div>
-    
+
+    <!-- React Particles Component -->
+    <script type="text/babel">
+        function ParticlesBackground() {
+            const canvasRef = React.useRef(null);
+
+            React.useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                let animationFrameId;
+                let particles = [];
+
+                const resizeCanvas = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                };
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+
+                // Create enhanced particles with varied colors
+                const particleCount = 250;
+                const colors = [
+                    'rgba(139, 92, 246, 0.6)',   // purple
+                    'rgba(59, 130, 246, 0.6)',   // blue
+                    'rgba(6, 182, 212, 0.6)',    // cyan
+                    'rgba(236, 72, 153, 0.6)'    // pink
+                ];
+
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 2.5 + 0.5,
+                        vx: (Math.random() - 0.5) * 0.15,
+                        vy: (Math.random() - 0.5) * 0.15,
+                        opacity: Math.random() * 0.6 + 0.3,
+                        color: colors[Math.floor(Math.random() * colors.length)]
+                    });
+                }
+
+                const animate = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    particles.forEach(particle => {
+                        // Update position
+                        particle.x += particle.vx;
+                        particle.y += particle.vy;
+
+                        // Bounce off edges
+                        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+
+                        // Draw particle with glow effect
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+
+                        // Create gradient for glow
+                        const gradient = ctx.createRadialGradient(
+                            particle.x, particle.y, 0,
+                            particle.x, particle.y, particle.radius * 2
+                        );
+                        gradient.addColorStop(0, particle.color);
+                        gradient.addColorStop(1, 'transparent');
+
+                        ctx.fillStyle = gradient;
+                        ctx.fill();
+                    });
+
+                    // Draw connections with gradient
+                    particles.forEach((p1, i) => {
+                        particles.slice(i + 1).forEach(p2 => {
+                            const dx = p1.x - p2.x;
+                            const dy = p1.y - p2.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+
+                            if (distance < 120) {
+                                ctx.beginPath();
+                                ctx.moveTo(p1.x, p1.y);
+                                ctx.lineTo(p2.x, p2.y);
+
+                                const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+                                gradient.addColorStop(0, p1.color);
+                                gradient.addColorStop(1, p2.color);
+
+                                ctx.strokeStyle = gradient;
+                                ctx.globalAlpha = 0.15 * (1 - distance / 120);
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                                ctx.globalAlpha = 1;
+                            }
+                        });
+                    });
+
+                    animationFrameId = requestAnimationFrame(animate);
+                };
+
+                animate();
+
+                return () => {
+                    window.removeEventListener('resize', resizeCanvas);
+                    cancelAnimationFrame(animationFrameId);
+                };
+            }, []);
+
+            return React.createElement('canvas', {
+                ref: canvasRef,
+                style: {
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 0
+                }
+            });
+        }
+
+        // Render Particles
+        const particlesRoot = ReactDOM.createRoot(document.getElementById('particles-background'));
+        particlesRoot.render(React.createElement(ParticlesBackground));
+    </script>
+
     <script>
+        // Remove loading class when content loads
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.loading').forEach(el => {
+                el.classList.remove('loading');
+            });
+        });
+
         // ===== LOAD ENHANCED ALTAIR VISUALIZATIONS =====
-        
+
         // Load Time Series with Enhanced Interactions
         fetch('time_series_spec_enhanced.json')
             .then(response => response.json())
             .then(spec => {
                 vegaEmbed('#timeSeriesChart', spec, {
-                    actions: {export: true, source: false, compiled: false, editor: false}
+                    actions: { export: true, source: false, compiled: false, editor: false }
                 });
             })
             .catch(error => console.error('Error loading time series:', error));
-        
-        // Load Enhanced Volatility Chart - Simple inline version
+
+        // Load Enhanced Volatility Chart
         const volatilitySpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "data": {"url": "volatility_data.csv"},
-            "mark": {"type": "boxplot", "size": 50, "color": "#4F46E5"  },
+            "data": { "url": "volatility_data.csv" },
+            "mark": { "type": "boxplot", "size": 50, "color": "#8B5CF6" },
             "encoding": {
                 "x": {
                     "field": "Ticker",
                     "type": "nominal",
                     "title": "Asset",
                     "sort": ["SPY", "BTC-USD", "ETH-USD", "XRP-USD", "LTC-USD", "BNB-USD"],
-                    "axis": {"labelAngle": -45}
+                    "axis": { "labelAngle": -45 }
                 },
                 "y": {
                     "field": "Rolling_Volatility",
                     "type": "quantitative",
                     "title": "30-Day Rolling Volatility",
-                    "scale": {"domain": [0, 0.15]}
-                },
-
+                    "scale": { "domain": [0, 0.15] }
+                }
             },
             "width": 800,
             "height": 400,
             "title": "Volatility Distribution Comparison"
         };
-        
+
         vegaEmbed('#volatilityChart', volatilitySpec, {
-            actions: {export: true, source: false, compiled: false, editor: false}
+            actions: { export: true, source: false, compiled: false, editor: false }
         }).catch(error => {
             console.error('Error rendering volatility chart:', error);
-            document.getElementById('volatilityChart').innerHTML = 
-                '<p style="color: red; padding: 20px;">Error: ' + error.message + '</p>';
         });
-        
+
         // Load Enhanced Volume-Price Chart
         fetch('volume_price_spec_enhanced.json')
             .then(response => response.json())
             .then(spec => {
                 vegaEmbed('#volumePriceChart', spec, {
-                    actions: {export: true, source: false, compiled: false, editor: false}
+                    actions: { export: true, source: false, compiled: false, editor: false }
                 });
             })
             .catch(error => console.error('Error loading volume-price chart:', error));
-        
-        // ===== VISUALIZATION 4: Correlation Heatmap =====
+
+        // ===== CORRELATION HEATMAP =====
         const correlationCtx = document.getElementById('correlationChart').getContext('2d');
-        
+
         const assets = ["BNB-USD", "BTC-USD", "ETH-USD", "LTC-USD", "SPY", "XRP-USD"];
         const correlationMatrix = [[1.0, 0.6291093160456803, 0.6379804458366646, 0.5862309795889612, 0.2546823549655465, 0.46624069034046767], [0.6291093160456803, 1.0, 0.8033039702904642, 0.7077641119192842, 0.3754115624374634, 0.5447056263513879], [0.6379804458366646, 0.8033039702904642, 1.0, 0.736727999190702, 0.3931351340788075, 0.5608781179616397], [0.5862309795889612, 0.7077641119192842, 0.736727999190702, 1.0, 0.33564867508728363, 0.5937281464187953], [0.2546823549655465, 0.3754115624374634, 0.3931351340788075, 0.33564867508728363, 1.0, 0.25834714202006714], [0.46624069034046767, 0.5447056263513879, 0.5608781179616397, 0.5937281464187953, 0.25834714202006714, 1.0]];
-        
+
         const heatmapData = [];
         for (let i = 0; i < assets.length; i++) {
             for (let j = 0; j < assets.length; j++) {
@@ -714,7 +1382,7 @@
                 });
             }
         }
-        
+
         const correlationChart = new Chart(correlationCtx, {
             type: 'matrix',
             data: {
@@ -724,14 +1392,14 @@
                     backgroundColor(context) {
                         const value = context.dataset.data[context.dataIndex].v;
                         const alpha = Math.abs(value);
-                        return value >= 0 
+                        return value >= 0
                             ? `rgba(244, 67, 54, ${alpha})`
                             : `rgba(33, 150, 243, ${alpha})`;
                     },
                     borderWidth: 1,
-                    borderColor: 'white',
-                    width: ({chart}) => (chart.chartArea || {}).width / assets.length - 1,
-                    height: ({chart}) => (chart.chartArea || {}).height / assets.length - 1
+                    borderColor: 'rgba(139, 92, 246, 0.2)',
+                    width: ({ chart }) => (chart.chartArea || {}).width / assets.length - 1,
+                    height: ({ chart }) => (chart.chartArea || {}).height / assets.length - 1
                 }]
             },
             options: {
@@ -742,17 +1410,26 @@
                     title: {
                         display: true,
                         text: 'Correlation Heatmap of Daily Returns',
-                        font: { size: 18 }
+                        font: { size: 20, family: 'Space Grotesk', weight: '700' },
+                        color: '#F8FAFC',
+                        padding: 20
                     },
                     legend: {
                         display: false
                     },
                     tooltip: {
+                        backgroundColor: 'rgba(10, 14, 26, 0.95)',
+                        titleColor: '#8B5CF6',
+                        bodyColor: '#F8FAFC',
+                        borderColor: '#8B5CF6',
+                        borderWidth: 2,
+                        padding: 12,
+                        cornerRadius: 8,
                         callbacks: {
                             title() { return ''; },
                             label(context) {
                                 const item = context.dataset.data[context.dataIndex];
-                                return `${item.y} vs ${item.x}: ${item.v.toFixed(2)}`;
+                                return `${item.y} vs ${item.x}: ${item.v.toFixed(3)}`;
                             }
                         }
                     }
@@ -763,7 +1440,9 @@
                         labels: assets,
                         offset: true,
                         ticks: {
-                            display: true
+                            display: true,
+                            color: '#CBD5E1',
+                            font: { size: 12, weight: '600' }
                         },
                         grid: {
                             display: false
@@ -775,7 +1454,9 @@
                         offset: true,
                         reverse: true,
                         ticks: {
-                            display: true
+                            display: true,
+                            color: '#CBD5E1',
+                            font: { size: 12, weight: '600' }
                         },
                         grid: {
                             display: false
@@ -784,8 +1465,8 @@
                 }
             }
         });
-        
-        // ===== VISUALIZATION 5: Drivers Network Map (D3.js) =====
+
+        // ===== DRIVERS NETWORK MAP =====
         const drivers = {
             "BTC-USD": ["Coinbase", "MicroStrategy", "Nvidia"],
             "ETH-USD": ["Coinbase", "Lido Finance", "Consensys"],
@@ -793,11 +1474,11 @@
             "LTC-USD": ["Coinbase", "Antpool", "Bitmain"],
             "BNB-USD": ["Binance", "Binance Smart Chain projects", "Paxos"]
         };
-        
+
         const nodes = [];
         const links = [];
         const node_ids = new Set();
-        
+
         for (const [ticker, driverList] of Object.entries(drivers)) {
             if (!node_ids.has(ticker)) {
                 const node_type = ticker === "SPY" ? "equity" : "crypto";
@@ -810,7 +1491,7 @@
                 node_ids.add(ticker);
             }
         }
-        
+
         for (const [ticker, driverList] of Object.entries(drivers)) {
             for (const driver of driverList) {
                 if (!node_ids.has(driver)) {
@@ -822,7 +1503,7 @@
                     });
                     node_ids.add(driver);
                 }
-                
+
                 links.push({
                     source: ticker,
                     target: driver,
@@ -830,67 +1511,67 @@
                 });
             }
         }
-        
+
         const networkData = { nodes, links };
-        
+
         const width = 1000;
         const height = 700;
-        
+
         const svg = d3.select("#network")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
             .attr("viewBox", [0, 0, width, height]);
-        
+
         const colorScale = d3.scaleOrdinal()
             .domain(["equity", "crypto", "driver"])
-            .range(["#4CAF50", "#2196F3", "#FF9800"]);
-        
+            .range(["#10B981", "#2196F3", "#FF9800"]);
+
         const simulation = d3.forceSimulation(networkData.nodes)
             .force("link", d3.forceLink(networkData.links)
                 .id(d => d.id)
-                .distance(80)
+                .distance(90)
             )
             .force("charge", d3.forceManyBody()
-                .strength(-300)
+                .strength(-350)
             )
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide().radius(30));
-        
+            .force("collision", d3.forceCollide().radius(35));
+
         const link = svg.append("g")
             .selectAll("line")
             .data(networkData.links)
             .join("line")
             .attr("class", "link")
-            .attr("stroke-width", 2);
-        
+            .attr("stroke-width", 2.5);
+
         const node = svg.append("g")
             .selectAll("g")
             .data(networkData.nodes)
             .join("g")
             .attr("class", "node")
             .call(drag(simulation));
-        
+
         node.append("circle")
-            .attr("r", d => d.type === "driver" ? 10 : 15)
+            .attr("r", d => d.type === "driver" ? 12 : 18)
             .attr("fill", d => colorScale(d.type))
             .attr("stroke", "#fff")
-            .attr("stroke-width", 2);
-        
+            .attr("stroke-width", 3);
+
         node.append("text")
             .attr("class", "node-label")
             .attr("dx", 0)
-            .attr("dy", d => d.type === "driver" ? -15 : -20)
+            .attr("dy", d => d.type === "driver" ? -18 : -24)
             .attr("text-anchor", "middle")
             .text(d => d.name)
-            .style("font-size", d => d.type === "driver" ? "10px" : "12px");
-        
+            .style("font-size", d => d.type === "driver" ? "11px" : "13px");
+
         const tooltip = d3.select("#tooltip");
-        
-        node.on("mouseover", function(event, d) {
+
+        node.on("mouseover", function (event, d) {
             const connectedNodes = new Set();
             connectedNodes.add(d.id);
-            
+
             link.classed("dimmed", l => {
                 if (l.source.id === d.id || l.target.id === d.id) {
                     connectedNodes.add(l.source.id);
@@ -899,69 +1580,70 @@
                 }
                 return true;
             })
-            .classed("highlighted", l => l.source.id === d.id || l.target.id === d.id);
-            
+                .classed("highlighted", l => l.source.id === d.id || l.target.id === d.id);
+
             node.classed("highlighted", n => connectedNodes.has(n.id))
-                .style("opacity", n => connectedNodes.has(n.id) ? 1 : 0.3);
-            
+                .style("opacity", n => connectedNodes.has(n.id) ? 1 : 0.25);
+
             const connections = networkData.links
                 .filter(l => l.source.id === d.id || l.target.id === d.id)
                 .map(l => l.source.id === d.id ? l.target.name : l.source.name);
-            
+
             tooltip.style("opacity", 1)
                 .html(`
-                    <strong>${d.name}</strong><br>
-                    Type: ${d.type}<br>
-                    Connections: ${connections.length}<br>
-                    <small>${connections.join(", ")}</small>
+                    <strong style="color: #8B5CF6;">${d.name}</strong><br>
+                    <span style="color: #CBD5E1;">Type: ${d.type}</span><br>
+                    <span style="color: #10B981;">Connections: ${connections.length}</span><br>
+                    <small style="color: #94A3B8;">${connections.join(", ")}</small>
                 `)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 10) + "px");
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY - 15) + "px");
         })
-        .on("mouseout", function() {
-            link.classed("dimmed", false)
-                .classed("highlighted", false);
-            node.classed("highlighted", false)
-                .style("opacity", 1);
-            tooltip.style("opacity", 0);
-        });
-        
+            .on("mouseout", function () {
+                link.classed("dimmed", false)
+                    .classed("highlighted", false);
+                node.classed("highlighted", false)
+                    .style("opacity", 1);
+                tooltip.style("opacity", 0);
+            });
+
         simulation.on("tick", () => {
             link
                 .attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
-            
+
             node
                 .attr("transform", d => `translate(${d.x},${d.y})`);
         });
-        
+
         function drag(simulation) {
             function dragstarted(event) {
                 if (!event.active) simulation.alphaTarget(0.3).restart();
                 event.subject.fx = event.subject.x;
                 event.subject.fy = event.subject.y;
             }
-            
+
             function dragged(event) {
                 event.subject.fx = event.x;
                 event.subject.fy = event.y;
             }
-            
+
             function dragended(event) {
                 if (!event.active) simulation.alphaTarget(0);
                 event.subject.fx = null;
                 event.subject.fy = null;
             }
-            
+
             return d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended);
         }
-        
-        console.log("All visualizations initialized!");
+
+        console.log("🎨 Enhanced visualizations initialized!");
     </script>
 </body>
+
 </html>
